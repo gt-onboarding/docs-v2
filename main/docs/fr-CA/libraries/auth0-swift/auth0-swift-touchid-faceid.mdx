@@ -9,7 +9,7 @@ permalink: "auth0-swift-touchid-faceid"
 'twitter:description': "Comment implémenter l’authentification Touch ID / Face ID avec Auth0.swift."
 ---
 
-import {AuthCodeBlock} from "/snippets/AuthCodeBlock.jsx";
+import {AuthCodeBlock} from "/snippets/fr-CA/AuthCodeBlock.jsx";
 
 Voici le scénario : Après l’authentification de l’utilisateur, il est nécessaire de stocker ses informations d’identification et de les utiliser tant qu’elles restent valides. Lorsque ces informations expirent, il est recommandé de les renouveler à l’aide du `refreshToken`, afin d’éviter de rediriger l’utilisateur de nouveau, vers la page de connexion. Au lieu de procéder automatiquement, vous demanderez à l’utilisateur de valider son identité via son empreinte digitale ou la reconnaissance faciale.
 

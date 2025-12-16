@@ -9,7 +9,7 @@ permalink: "oidc-adoption-implicit-flow"
 'twitter:description': "OIDC準拠のパイプラインが暗黙フローに与える影響について説明します。"
 ---
 
-import {AuthCodeBlock} from "/snippets/AuthCodeBlock.jsx";
+import {AuthCodeBlock} from "/snippets/ja-JP/AuthCodeBlock.jsx";
 
 [暗黙フロー](/docs/ja-JP/ja-jp/get-started/authentication-and-authorization-flow/implicit-flow-with-form-post)は従来、シークレットを安全に保存できないアプリケーションで使用されていましたが、このフローの使用はアクセストークンを要求するためのベストプラクティスとはみなされなくなりました。新しい実装では、[PKCEを使った認可コードフロー](/docs/ja-JP/ja-jp/get-started/authentication-and-authorization-flow/authorization-code-flow-with-pkce)を使用してください。ただし、アプリケーションがユーザー認証にIDトークンのみを必要とする場合、フォームPOST応答モードと併用することでワークフローが効率化します。この場合は、[ハイブリッドフロー](/docs/ja-JP/ja-jp/get-started/authentication-and-authorization-flow/hybrid-flow)の一部として使用します。
 

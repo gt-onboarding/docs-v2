@@ -9,7 +9,7 @@ permalink: "auth0-swift-touchid-faceid"
 'twitter:description': "Auth0.swiftを使ってTouch IDやFace IDでの認証を実装する方法について説明します。"
 ---
 
-import {AuthCodeBlock} from "/snippets/AuthCodeBlock.jsx";
+import {AuthCodeBlock} from "/snippets/ja-JP/AuthCodeBlock.jsx";
 
 次のようなシナリオです：ユーザーが認証したら、そのユーザーの資格情報を保管して、有効期間中は継続して使用したいと考えます。有効期限が切れたら、`refreshToken`を使って更新し、ログインページが再度表示されないようにしたいと考えます。これを自動的に行うのではなく、ユーザーの指紋認識や顔認識で本人確認を求めます。
 
