@@ -41,19 +41,19 @@ export const DocsFeatureCards = () => {
   const features = [
     {
       title: "ドキュメント",
-      link: "/docs/get-started",
+      link: "/docs/ja-JP/get-started",
       icon: "/docs/images/home/icon1",
       external: true,
     },
     {
       title: "API リファレンス",
-      link: "/docs/api",
+      link: "/docs/ja-JP/api",
       icon: "/docs/images/home/icon2",
       external: false,
     },
     {
       title: "ソフトウェア開発キット (SDK)",
-      link: "/docs/libraries",
+      link: "/docs/ja-JP/libraries",
       icon: "/docs/images/home/icon3",
       external: false,
     },

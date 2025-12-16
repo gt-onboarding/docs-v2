@@ -41,19 +41,19 @@ export const DocsFeatureCards = () => {
   const features = [
     {
       title: "Documentation",
-      link: "/docs/get-started",
+      link: "/docs/fr-CA/get-started",
       icon: "/docs/images/home/icon1",
       external: true,
     },
     {
       title: "Références d’API",
-      link: "/docs/api",
+      link: "/docs/fr-CA/api",
       icon: "/docs/images/home/icon2",
       external: false,
     },
     {
       title: "Trousses de développement logiciel (SDK)",
-      link: "/docs/libraries",
+      link: "/docs/fr-CA/libraries",
       icon: "/docs/images/home/icon3",
       external: false,
     },
