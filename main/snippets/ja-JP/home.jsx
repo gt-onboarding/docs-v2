@@ -108,42 +108,42 @@ export const LanguageGrid = () => {
     {
       img: "react.svg",
       label: "React",
-      href: "/docs/quickstart/spa/react",
+      href: "/docs/ja-JP/quickstart/spa/react",
     },
     {
       img: "angular.svg",
       label: "Angular",
-      href: "/docs/quickstart/spa/angular",
+      href: "/docs/ja-JP/quickstart/spa/angular",
     },
     {
       img: "nextjs.svg",
       label: "Next.js",
-      href: "/docs/quickstart/webapp/nextjs",
+      href: "/docs/ja-JP/quickstart/webapp/nextjs",
     },
     {
       img: "apple.svg",
       label: "iOS",
-      href: "/docs/quickstart/native/ios-swift",
+      href: "/docs/ja-JP/quickstart/native/ios-swift",
     },
     {
       img: "android.svg",
       label: "Android",
-      href: "/docs/quickstart/native/android",
+      href: "/docs/ja-JP/quickstart/native/android",
     },
     {
       img: "java.svg",
       label: "Java",
-      href: "/docs/quickstart/backend/java-spring-security5/interactive",
+      href: "/docs/ja-JP/quickstart/backend/java-spring-security5/interactive",
     },
     {
       img: "dotnet.svg",
       label: ".NET",
-      href: "/docs/quickstart/backend/aspnet-core-webapi",
+      href: "/docs/ja-JP/quickstart/backend/aspnet-core-webapi",
     },
     {
       img: "python.svg",
       label: "Python",
-      href: "/docs/quickstart/backend/python",
+      href: "/docs/ja-JP/quickstart/backend/python",
     },
   ];
 
