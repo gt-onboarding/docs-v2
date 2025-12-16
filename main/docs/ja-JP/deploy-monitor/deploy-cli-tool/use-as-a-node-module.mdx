@@ -1,0 +1,159 @@
+---
+title: "ノードモジュールとして使用する"
+permalink: "use-as-a-node-module"
+'description': "Auth0 Deploy CLIをノードモジュールとして使用する方法について説明します。"
+'og:title': "ノードモジュールとして使用する"
+'og:description': "Auth0 Deploy CLIをノードモジュールとして使用する方法について説明します。"
+'og:image': "https://cdn2.auth0.com/docs/1.14567.0/img/share-image.png"
+'twitter:title': "ノードモジュールとして使用する"
+'twitter:description': "Auth0 Deploy CLIをノードモジュールとして使用する方法について説明します。"
+---
+
+Deploy CLIは、スタンドアロンのCLIとしてだけでなく、ノードモジュールとしても使用できます。これにより、Auth0リソースを表現豊かなノードスクリプト内で管理できるようになります。
+
+設定の包括的なリストについては、「[Deploy CLIを構成する](/docs/ja-JP/ja-jp/deploy-monitor/deploy-cli-tool/configure-the-deploy-cli)」をお読みください。
+
+<div id="dump-function">
+  ## dump関数
+</div>
+
+Auth0テナントからローカルマシンに構成を取得します。
+
+<div id="argument-parameters">
+  ### 引数パラメーター
+</div>
+
+<div id="format">
+  #### format
+</div>
+
+オプション：`yaml`または`directory`。エクスポートされるリソース構成ファイルのファイル形式を決定します。詳細については、「[利用可能なリソース構成形式](/docs/ja-JP/ja-jp/deploy-monitor/deploy-cli-tool/available-resource-configuration-formats)」をお読みください。
+
+<div id="output_folder">
+  #### output&#95;folder
+</div>
+
+パス。構成ファイルを書き込む目的のディレクトリを指定します。
+
+<div id="config">
+  #### config
+</div>
+
+オブジェクト。ユーティリティの動作を構成します。詳細については、「[Deploy CLIを構成する](/docs/ja-JP/ja-jp/deploy-monitor/deploy-cli-tool/configure-the-deploy-cli)」をお読みください。
+
+<div id="config_file">
+  #### config&#95;file
+</div>
+
+パス。ユーザー定義の構成ファイル（`config.json`）を指定します。詳細については、「[Deploy CLIを構成する](/docs/ja-JP/ja-jp/deploy-monitor/deploy-cli-tool/configure-the-deploy-cli)」をお読みください。
+
+<div id="export_ids">
+  #### export&#95;ids
+</div>
+
+ブール値。有効にすると、各リソースの識別子フィールドをエクスポートします。デフォルト：`false`。
+
+<div id="env">
+  #### env
+</div>
+
+ブール値。ツールが環境変数を取り込むかどうかを示します。デフォルト：`false`。
+
+<div id="proxy_url">
+  #### proxy&#95;url
+</div>
+
+要求をプロキシするためのURL。プロキシを使用している場合にのみこれを設定します。
+
+<div id="example">
+  ### 例
+</div>
+
+```javascript lines
+import { dump } from 'auth0-deploy-cli';
+
+dump({
+  output_folder: './local',
+  format: 'yaml',
+  config: {
+    AUTH0_DOMAIN: '<YOUR_AUTH0_TENANT_DOMAIN>',
+    AUTH0_CLIENT_ID: '<YOUR_AUTH0_CLIENT_ID>',
+    AUTH0_CLIENT_SECRET: '<YOUR_AUTH0_CLIENT_SECRET>',
+  },
+})
+  .then(() => {
+    console.log('Auth0 configuration export successful');
+  })
+  .catch((err) => {
+    console.log('Error during Auth0 configuration export:', err);
+  });
+```
+
+<div id="deploy-function">
+  ## デプロイ機能
+</div>
+
+ローカルマシンからAuth0テナントに構成を適用します。
+
+<div id="argument-parameters">
+  ### 引数パラメーター
+</div>
+
+<div id="input_file">
+  #### input&#95;file
+</div>
+
+パス。リソース構成ファイルの場所を指定します。YAML形式の場合、これは`tenant.yaml`ファイルをポイントします。ディレクトリ形式の場合、これはリソース構成ディレクトリをポイントします。
+
+<div id="config">
+  #### config
+</div>
+
+オブジェクト。ユーティリティの動作を構成します。詳細については、「[Deploy CLIを構成する](/docs/ja-JP/ja-jp/deploy-monitor/deploy-cli-tool/configure-the-deploy-cli)」をお読みください。
+
+<div id="config_file">
+  #### config&#95;file
+</div>
+
+パス。ユーザー定義の構成ファイル（`config.json`）を指定します。詳細については、「[Deploy CLIを構成する](/docs/ja-JP/ja-jp/deploy-monitor/deploy-cli-tool/configure-the-deploy-cli)」をお読みください。
+
+<div id="export_ids">
+  #### export&#95;ids
+</div>
+
+ブール値。有効にすると、各リソースの識別子フィールドをエクスポートします。デフォルト：`false`。
+
+<div id="env">
+  #### env
+</div>
+
+ブール値。ツールが環境変数を取り込むかどうかを示します。デフォルト：`false`。
+
+<div id="proxy_url">
+  #### proxy&#95;url
+</div>
+
+要求をプロキシするためのURL。プロキシを使用している場合にのみこれを設定します。
+
+<div id="example">
+  ### 例
+</div>
+
+```javascript lines
+import { deploy } from 'auth0-deploy-cli';
+
+deploy({
+  input_file: './local/tenant.yaml',
+  config: {
+    AUTH0_DOMAIN: '<YOUR_AUTH0_TENANT_DOMAIN>',
+    AUTH0_CLIENT_ID: '<YOUR_AUTH0_CLIENT_ID>',
+    AUTH0_CLIENT_SECRET: '<YOUR_AUTH0_CLIENT_SECRET>',
+  },
+})
+  .then(() => {
+    console.log('Auth0 configuration applied to tenant successful');
+  })
+  .catch((err) => {
+    console.log('Error when applying configuration to Auth0 tenant:', err);
+  });
+```

@@ -1,0 +1,140 @@
+---
+description: Découvrez comment appliquer la restriction de l’expéditeur aux jetons à l’aide de mTLS dans Auth0.
+'og:image': https://cdn2.auth0.com/docs/1.14553.0/img/share-image.png
+'og:title': mTLS Sender Constraining (restriction de l’expéditeur)
+'og:url': https://auth0.com/docs/
+permalink: mtls-sender-constraining
+title: mTLS Sender Constraining (restriction de l’expéditeur)
+'twitter:description': Découvrez comment appliquer la restriction de l’expéditeur aux jetons à l’aide de mTLS dans Auth0.
+'twitter:title': mTLS Sender Constraining (restriction de l’expéditeur)
+---
+
+<Callout icon="file-lines" color="#0EA5E9" iconType="regular">
+  Pour utiliser les fonctionnalités Highly Regulated Identity, vous devez disposer d’un plan Enterprise avec l’add-on Highly Regulated Identity. Consultez la page [Auth0 Pricing](https://auth0.com/pricing/) pour plus de détails.
+</Callout>
+
+[Sender constraining](/docs/fr-CA/secure/sender-constraining) est un mécanisme de sécurité <Tooltip tip="OAuth 2.0 : Cadre d’autorisation qui définit les protocoles et les flux d’autorisation." cta="Afficher le glossaire" href="/docs/fr-CA/glossary?term=OAuth+2.0">OAuth 2.0</Tooltip> qui lie de façon cryptographique les jetons d’accès et les <Tooltip tip="Refresh Token : Jeton utilisé pour obtenir un nouveau jeton d’accès sans forcer les utilisateurs à se reconnecter." cta="Afficher le glossaire" href="/docs/fr-CA/glossary?term=refresh+tokens">jetons d’actualisation</Tooltip> à l’application cliente qui les a demandés. Cela garantit que seul le client légitime qui a obtenu le <Tooltip tip="Access Token : Justificatif d’autorisation, sous la forme d’une chaîne opaque ou d’un JWT, utilisé pour accéder à une API." cta="Afficher le glossaire" href="/docs/fr-CA/glossary?term=access+token">jeton d’accès</Tooltip> peut l’utiliser pour accéder aux ressources protégées, offrant une protection efficace contre le vol de jetons et les attaques par rejeu.
+
+Les jetons d’accès liés au certificat client Mutual-TLS (mTLS), ou restriction de l’expéditeur mTLS, établissent cette liaison en tirant parti du certificat TLS du client. Avec mTLS, le jeton d’accès du client est lié à son certificat client unique, ce qui rend le jeton inutilisable par toute autre partie.
+
+<div id="prerequisites">
+  ## Conditions préalables
+</div>
+
+Pour mettre en œuvre la contrainte d’émetteur mTLS, vous devez :
+
+* Disposer d’un plan Enterprise avec le module complémentaire Highly Regulated Identity pour votre locataire Auth0.
+* [Configurer la contrainte d’émetteur](/docs/fr-CA/secure/sender-constraining/configure-sender-constraining) pour votre application cliente et le <Tooltip tip="Serveur de ressources : serveur qui héberge des ressources protégées. Les serveurs de ressources acceptent et répondent aux requêtes de ressources protégées." cta="Afficher le glossaire" href="/docs/fr-CA/glossary?term=resource+server">serveur de ressources</Tooltip> dans Auth0.
+* Veiller à ce que votre application cliente soit un <Tooltip tip="Client confidentiel : client (application) qui peut conserver des informations d’identification de façon sécuritaire en utilisant un serveur principal de confiance. Parmi les exemples, on compte une application Web avec un serveur principal sécurisé et une application machine-à-machine (M2M)." cta="Afficher le glossaire" href="/docs/fr-CA/glossary?term=confidential+client">client confidentiel</Tooltip>, puisque seuls les clients confidentiels prennent en charge la contrainte d’émetteur mTLS.
+
+<div id="how-it-works">
+  ## Fonctionnement
+</div>
+
+Cette section décrit le processus permettant d’obtenir et d’utiliser un jeton d’accès lié à mTLS.
+
+<Frame>![](/docs/images/cdy7uua7fh8z/Nrf2Jm8Gq1yuMlS35jqDR/3972d735b883ea1ce5ae0999b678db2f/Screenshot_2025-07-30_at_4.07.34_PM.png)</Frame>
+
+<div id="phase-1-request-an-mtls-bound-access-token">
+  ## Phase 1: Request an mTLS-bound access token
+</div>
+
+<div id="step-1-client-application-establishes-mtls-connection">
+  ### Étape 1 : l&#39;application cliente établit une connexion mTLS
+</div>
+
+* Avant de demander un jeton d’accès, votre application cliente initie une négociation TLS avec le point de terminaison `/token` du <Tooltip tip="Serveur d’autorisation : serveur centralisé qui contribue à définir les limites de l’accès d’un utilisateur. Par exemple, votre serveur d’autorisation peut contrôler les données, les tâches et les fonctionnalités accessibles à un utilisateur." cta="Afficher le glossaire" href="/docs/fr-CA/glossary?term=Authorization+Server">Serveur d’autorisation</Tooltip> Auth0.
+* Pendant cette négociation, l&#39;application cliente présente son certificat client au Serveur d’autorisation Auth0 dans le cadre du processus d’authentification TLS mutuelle (mTLS).
+
+<div id="step-2-client-application-requests-access-token">
+  ### Étape 2 : L&#39;application cliente demande un jeton d’accès
+</div>
+
+* L&#39;application cliente envoie une requête de jeton OAuth 2.0 standard, par exemple en utilisant `grant_type=client_credentials` ou `authorization_code`, au point de terminaison `/token` du Serveur d’autorisation d’Auth0.
+* La requête de jeton n’inclut aucun en-tête DPoP spécial ni de <Tooltip tip="JSON Web Token (JWT): Standard ID Token format (and often Access Token format) used to represent claims securely between two parties." cta="View Glossary" href="/docs/fr-CA/glossary?term=JWTs">JWTs</Tooltip> de preuve supplémentaires pour mTLS. La preuve de possession est dérivée directement de la connexion mTLS.
+
+<div id="step-3-auth0-authorization-server-processes-request-and-binds-token">
+  ### Étape 3 : le Serveur d’autorisation Auth0 traite la requête et lie le jeton
+</div>
+
+Lorsque le Serveur d’autorisation Auth0 reçoit la requête de jeton sur une connexion mTLS et que le certificat client est validé avec succès :
+
+1. **Extrait le certificat :** le Serveur d’autorisation Auth0 extrait le certificat client utilisé dans la poignée de main mTLS.
+2. **Calcule l’empreinte :** le Serveur d’autorisation Auth0 calcule un hachage unique (empreinte) du certificat client.
+3. **Lie le jeton :** le Serveur d’autorisation Auth0 lie l’empreinte de ce certificat client au jeton d’accès émis en incluant une revendication de confirmation (`cnf`) dans la charge utile du jeton d’accès.
+
+   * La revendication `cnf` contient le paramètre `x5t#S256`, qui est l’empreinte SHA-256 du certificat client, encodée en Base64url.
+4. **Définit** `token_type`** :** le Serveur d’autorisation Auth0 définit `token_type` sur DPoP. Cela diffère des jetons Bearer traditionnels et indique que le jeton est lié à une clé spécifique.
+5. **Émet le jeton :** le Serveur d’autorisation Auth0 émet le jeton d’accès mTLS restreint à l’expéditeur à votre application cliente.
+
+L’exemple de code suivant illustre une charge utile de jeton d’accès lié à un certificat mTLS :
+
+```json lines
+{
+  "iss": "https://server.example.com",
+  "sub": "ty.webb@example.com",
+  "exp": 1493726400,
+  "nbf": 1493722800,
+  "cnf": {
+    "x5t#S256": "bwcK0esc3ACC3DB2Y5_lESsXE8o9ltc05O89jdN-dg2"
+  }
+}
+```
+
+Dans l’exemple de jeton d’accès lié à un certificat mTLS, `x5t#S256` indique que le jeton d’accès est lié à un certificat client mTLS dont l’empreinte SHA-256 est `bwcK0esc3ACC3DB2Y5_lESsXE8o9ltc05O89jdN-dg2`.
+
+<div id="phase-2-call-an-api-with-an-mtls-bound-access-token">
+  ## Phase 2: Call an API with an mTLS-bound access token
+</div>
+
+<div id="step-4-client-application-calls-api">
+  ### Step 4: Client application calls API
+</div>
+
+* When your client application needs to call an API that enforces mTLS sender constraining, it must establish a new mTLS connection with the resource server.
+* During this mTLS handshake, the client application presents the same client certificate that was used to obtain the access token again.
+* The client application then includes the mTLS-bound access token in the Authorization header of the API request using the DPoP authentication scheme:
+
+```http lines
+Authorization: DPoP {your_mtls_bound_access_token}
+```
+
+<Callout icon="file-lines" color="#0EA5E9" iconType="regular">
+  While RFC 8705 allows for a Bearer scheme with mTLS-bound tokens, Auth0 recommends using DPoP to enforce mTLS-bound access tokens. This explicitly signals to the resource server to expect a cryptographically bound token.
+</Callout>
+
+<div id="step-5-resource-server-verifies-token-and-certificate">
+  ### Step 5: Resource server verifies token and certificate
+</div>
+
+When the resource server receives the API request over an mTLS connection:
+
+1. **Requests client certificate:** The resource server retrieves the client certificate from the established mTLS connection.
+2. **Extracts token and cnf claim:** The resource server extracts the access token from the `Authorization` header and decodes its payload to find the `cnf` (confirmation) claim, specifically the `x5t#S256` value (the bound certificate&#39;s thumbprint).
+3. **Calculates current certificate thumbprint:** The resource server calculates the SHA-256 thumbprint of the client certificate received in the current mTLS connection.
+4. **Compares thumbprints (Proof-of-Possession verification):** The resource server compares the newly calculated thumbprint with the `x5t#S256` thumbprint from the access token&#39;s `cnf` claim.
+5. **Authorizes or rejects request:**
+
+   * If the thumbprints match and other token validations, such as the expiration, audience, and issuer, pass, the request is authorized.
+   * If the client certificate was not sent, or its thumbprint does not match the one in the `cnf` claim, the resource server rejects the request with an `HTTP 401 Unauthorized` status code and an `invalid_token` error code.
+
+To understand how the thumbprint is calculated and the format of the `cnf` claim, refer to RFC 8705: Mutual-TLS Client Certificate-Bound Access Tokens.
+
+<div id="important-considerations">
+  ## Considérations importantes
+</div>
+
+Lorsque vous mettez en œuvre la contrainte de l’émetteur mTLS, tenez compte des éléments suivants :
+
+* **Clients confidentiels uniquement :** la contrainte de l’émetteur mTLS est conçue pour et prise en charge uniquement par des clients confidentiels, comme des services backend, qui peuvent gérer de façon sécuritaire les certificats client et établir des connexions mTLS. <Tooltip tip="Client public : Client (application) qui ne peut pas conserver des identifiants de manière sécuritaire. Parmi les exemples, on retrouve une application de bureau native ou mobile, ainsi qu’une application Web côté client basée sur JavaScript (comme une application monopage (SPA))." cta="Afficher le glossaire" href="/docs/fr-CA/glossary?term=Public+clients">Clients publics</Tooltip> comme les SPA et les applications mobiles doivent utiliser DPoP.
+* **Gestion des certificats :** la sécurité de votre implémentation mTLS dépend fortement de vos pratiques de gestion des certificats, notamment la façon dont vous provisionnez, gérez et renouvelez les certificats client.
+* **Exigences d’infrastructure :** la mise en œuvre de mTLS nécessite une infrastructure spécifique, y compris des proxys, des équilibreurs de charge et des API capables de terminer les connexions mTLS et de transmettre les informations relatives au certificat client à l’application ou au serveur de ressources.
+* **Application par le serveur de ressources :** lorsque vous activez la contrainte de l’émetteur mTLS pour une API dans Auth0, le serveur de ressources doit effectuer la vérification de l’empreinte numérique, comme décrit à l’[étape 5](#step-5-resource-server-verifies-token-and-certificate).
+* **Stratégies de migration :** si vous migrez progressivement des clients vers l’utilisation de mTLS, envisagez d’exposer votre API sur deux domaines : un domaine sans mTLS pour les clients existants et un domaine avec mTLS activé pour les clients compatibles mTLS. Vous pouvez aussi implémenter une logique sur un seul domaine pour distinguer les requêtes mTLS des requêtes non mTLS.
+* **Gestion des erreurs :** implémentez une gestion robuste des erreurs sur le client et le serveur de ressources afin de gérer correctement les cas où les certificats sont manquants, non valides ou ne correspondent pas.
+
+<div id="learn-more">
+  ## En savoir plus
+</div>
+
+* [Configurer la restriction de l’expéditeur](/docs/fr-CA/secure/sender-constraining/configure-sender-constraining)

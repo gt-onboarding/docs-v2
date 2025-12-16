@@ -1,0 +1,35 @@
+---
+description: ルールのグローバル変数をAuth0 Dashboardを使って構成する方法を説明します。
+'og:image': https://cdn2.auth0.com/docs/1.14553.0/img/share-image.png
+'og:title': ルールのグローバル変数を構成する
+'og:url': https://auth0.com/docs/
+permalink: configure-global-variables-for-rules
+title: ルールのグローバル変数を構成する
+'twitter:description': ルールのグローバル変数をAuth0 Dashboardを使って構成する方法を説明します。
+'twitter:title': ルールのグローバル変数を構成する
+---
+
+<Warning>
+  RulesとHooksのサポート終了（EOL）日は**2026年11月18日**であり、**2023年10月16日**以降に作成された新しいテナントでは利用できません。Hooksが有効な既存のテナントは、サポート終了までHooksを利用できます。
+
+  今後はActionsに移行して、Auth0の機能を拡張することを強くお勧めします。Actionsを使用すると、豊富な型情報やインラインドキュメント、パブリックな `npm` パッケージにアクセスでき、外部統合を接続して全体的な拡張性のエクスペリエンスを向上させることができます。Actionsが提供する機能の詳細については、「[Auth0 Actionsの仕組みを理解する](/docs/ja-JP/customize/actions/actions-overview)」を参照してください。
+
+  移行を支援するために、[RulesからActionsへの移行](/docs/ja-JP/customize/actions/migrate/migrate-from-rules-to-actions)および[HooksからActionsへの移行](/docs/ja-JP/customize/actions/migrate/migrate-from-hooks-to-actions)に関するガイドを用意しています。また、専用の[Move to Actions](https://auth0.com/extensibility/movetoactions)ページでは、機能の比較や[Actionsのデモ](https://www.youtube.com/watch?v=UesFSY1klrI)、その他のリソースを紹介し、移行プロセスを支援します。
+
+  RulesとHooksの廃止について詳しくは、ブログ記事「[RulesとHooksの提供終了に向けた準備](https://auth0.com/blog/preparing-for-rules-and-hooks-end-of-life/)」を参照してください。
+</Warning>
+
+ルールのグローバル変数はAuth0 Dashboardを使用して構成できます。詳細については、「[Auth0 Rules](/docs/ja-JP/customize/rules)」をご覧ください。
+
+1. [［Auth0 Dashboard］&gt;［Auth Pipeline（Authパイプライン）］&gt;［Rules（ルール）］](https://manage.auth0.com/#/rules) に移動して、**［Settings（設定）］** セクションを見つけます。
+
+   <Frame>![Dashboard - Auth Pipeline - Rules ](/docs/images/cdy7uua7fh8z/4OiSXzc5fYgPagHdOGbfvj/a589bdf811df66658fe21c509aed610c/Dashboard_-_Auth_Pipeline_-_Rules.png)</Frame>
+2. 変数のキーと値のペアを入力し、**［+Add（追加）］** を選択します。
+
+   入力した値はグローバルな `configuration` オブジェクト経由ですべてのルールで利用できるようになり、**［Code Snippet（コードスニペット）］** 列の値を使用して参照できます。
+
+<div id="learn-more">
+  ## 詳しくは
+</div>
+
+* [Rules の作成](/docs/ja-JP/customize/rules/create-rules)
